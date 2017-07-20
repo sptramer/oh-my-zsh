@@ -5,98 +5,99 @@
 #
 # Hat tip to Steve Losh's excellent zsh blog post for some info
 # (http://stevelosh.com/blog/2010/02/my-extravagant-zsh-prompt/)
-# 
+#
 #----
 
 # Get the status of the working tree (copied from sunrise theme)
-# TODO: Support for svn, etc.
 
 svc_prompt_status() {
-	git branch > /dev/null 2>/dev/null && custom_git_prompt_status && return
-	hg root > /dev/null 2>/dev/null && custom_hg_prompt_status && return
-	
-	echo "" && return
+    if [[ GB_GIT_ENABLED ]]; then
+        git branch > /dev/null 2>/dev/null && custom_git_prompt_status && return
+    fi
+    if [[ GB_HG_ENABLED ]]; then
+        hg root > /dev/null 2>/dev/null && custom_hg_prompt_status && return
+    fi
+
+    echo "" && return
 }
 
 custom_hg_prompt_status() {
-	INDEX=$(hg status)
-	STATUS=""
-	
-	if $(echo "$INDEX" | grep '^A' &>/dev/null); then
-		STATUS="$ZSH_THEME_GIT_PROMPT_STAGED_ADDED$STATUS"
-	fi
-	if $(echo "$INDEX" | grep '^M' &>/dev/null); then
-		STATUS="$ZSH_THEME_GIT_PROMPT_STAGED_MODIFIED$STATUS"
-	fi
-	if $(echo "$INDEX" | grep '^R' &>/dev/null); then
-		STATUS="$ZSH_THEME_GIT_PROMPT_STAGED_DELETED$STATUS"
-	fi
-	if $(echo "$INDEX" | grep '^!' &>/dev/null); then
-		STATUS="$ZSH_THEME_GIT_PROMPT_DELETED$STATUS"
-	fi
-	if $(echo "$INDEX" | grep '^?' &>/dev/null); then
-		STATUS="$ZSH_THEME_GIT_PROMPT_UNTRACKED$STATUS"
-	fi
-	
-	echo $STATUS
+    INDEX=$(hg status)
+    STATUS=""
+
+    if $(echo "$INDEX" | grep '^A' &>/dev/null); then
+        STATUS="$ZSH_THEME_GIT_PROMPT_STAGED_ADDED$STATUS"
+    fi
+    if $(echo "$INDEX" | grep '^M' &>/dev/null); then
+        STATUS="$ZSH_THEME_GIT_PROMPT_STAGED_MODIFIED$STATUS"
+    fi
+    if $(echo "$INDEX" | grep '^R' &>/dev/null); then
+        STATUS="$ZSH_THEME_GIT_PROMPT_STAGED_DELETED$STATUS"
+    fi
+    if $(echo "$INDEX" | grep '^!' &>/dev/null); then
+        STATUS="$ZSH_THEME_GIT_PROMPT_DELETED$STATUS"
+    fi
+    if $(echo "$INDEX" | grep '^?' &>/dev/null); then
+        STATUS="$ZSH_THEME_GIT_PROMPT_UNTRACKED$STATUS"
+    fi
+
+    echo $STATUS
 }
-
-
 
 # copied from sunrise theme
 gbl_git_prompt_status() {
-  INDEX=$(command git status --porcelain 2> /dev/null)
-  STATUS=""
-  # Non-staged
-  if $(echo "$INDEX" | grep '^?? ' &> /dev/null); then
-    STATUS="$ZSH_THEME_GIT_PROMPT_UNTRACKED$STATUS"
-  fi
-  if $(echo "$INDEX" | grep '^UU ' &> /dev/null); then
-    STATUS="$ZSH_THEME_GIT_PROMPT_UNMERGED$STATUS"
-  fi
-  if $(echo "$INDEX" | grep '^ D ' &> /dev/null); then
-    STATUS="$ZSH_THEME_GIT_PROMPT_DELETED$STATUS"
-  fi
-  if $(echo "$INDEX" | grep '^.M ' &> /dev/null); then
-    STATUS="$ZSH_THEME_GIT_PROMPT_MODIFIED$STATUS"
-  elif $(echo "$INDEX" | grep '^AM ' &> /dev/null); then
-    STATUS="$ZSH_THEME_GIT_PROMPT_MODIFIED$STATUS"
-  elif $(echo "$INDEX" | grep '^ T ' &> /dev/null); then
-    STATUS="$ZSH_THEME_GIT_PROMPT_MODIFIED$STATUS"
-  fi
-  # Staged
-  if $(echo "$INDEX" | grep '^D  ' &> /dev/null); then
-    STATUS="$ZSH_THEME_GIT_PROMPT_STAGED_DELETED$STATUS"
-  fi
-  if $(echo "$INDEX" | grep '^R' &> /dev/null); then
-    STATUS="$ZSH_THEME_GIT_PROMPT_STAGED_RENAMED$STATUS"
-  fi
-  if $(echo "$INDEX" | grep '^M' &> /dev/null); then
-    STATUS="$ZSH_THEME_GIT_PROMPT_STAGED_MODIFIED$STATUS"
-  fi
-  if $(echo "$INDEX" | grep '^A' &> /dev/null); then
-    STATUS="$ZSH_THEME_GIT_PROMPT_STAGED_ADDED$STATUS"
-  fi
-  if $(echo -n "$STATUS" | grep '.*' &> /dev/null); then
-    STATUS="$ZSH_THEME_GIT_STATUS_PREFIX$STATUS"
-  fi
+    INDEX=$(command git status --porcelain 2> /dev/null)
+    STATUS=""
+    # Non-staged
+    if $(echo "$INDEX" | grep '^?? ' &> /dev/null); then
+        STATUS="$ZSH_THEME_GIT_PROMPT_UNTRACKED$STATUS"
+    fi
+    if $(echo "$INDEX" | grep '^UU ' &> /dev/null); then
+        STATUS="$ZSH_THEME_GIT_PROMPT_UNMERGED$STATUS"
+    fi
+    if $(echo "$INDEX" | grep '^ D ' &> /dev/null); then
+        STATUS="$ZSH_THEME_GIT_PROMPT_DELETED$STATUS"
+    fi
+    if $(echo "$INDEX" | grep '^.M ' &> /dev/null); then
+        STATUS="$ZSH_THEME_GIT_PROMPT_MODIFIED$STATUS"
+    elif $(echo "$INDEX" | grep '^AM ' &> /dev/null); then
+        STATUS="$ZSH_THEME_GIT_PROMPT_MODIFIED$STATUS"
+    elif $(echo "$INDEX" | grep '^ T ' &> /dev/null); then
+        STATUS="$ZSH_THEME_GIT_PROMPT_MODIFIED$STATUS"
+    fi
+    # Staged
+    if $(echo "$INDEX" | grep '^D  ' &> /dev/null); then
+        STATUS="$ZSH_THEME_GIT_PROMPT_STAGED_DELETED$STATUS"
+    fi
+    if $(echo "$INDEX" | grep '^R' &> /dev/null); then
+        STATUS="$ZSH_THEME_GIT_PROMPT_STAGED_RENAMED$STATUS"
+    fi
+    if $(echo "$INDEX" | grep '^M' &> /dev/null); then
+        STATUS="$ZSH_THEME_GIT_PROMPT_STAGED_MODIFIED$STATUS"
+    fi
+    if $(echo "$INDEX" | grep '^A' &> /dev/null); then
+        STATUS="$ZSH_THEME_GIT_PROMPT_STAGED_ADDED$STATUS"
+    fi
+    if $(echo -n "$STATUS" | grep '.*' &> /dev/null); then
+        STATUS="$ZSH_THEME_GIT_STATUS_PREFIX$STATUS"
+    fi
 
-  echo $STATUS
+    echo $STATUS
 }
 
 parse_hg_dirty() {
-	if [[ -n $(hg status 2>/dev/null) ]] ; then
-		echo $ZSH_THEME_GIT_PRIMPT_DIRTY
-	else
-		echo $ZSH_THEME_GIT_PROMPT_CLEAN
-	fi
+    if [[ -n $(hg status 2>/dev/null) ]] ; then
+        echo $ZSH_THEME_GIT_PRIMPT_DIRTY
+    else
+        echo $ZSH_THEME_GIT_PROMPT_CLEAN
+    fi
 }
 
 parse_svc_dirty() {
-	git branch >/dev/null 2>/dev/null && parse_git_dirty && return
-	hg root >/dev/null 2>/dev/null && parse_hg_dirty && return
-	
-	echo ''
+    git branch >/dev/null 2>/dev/null && parse_git_dirty && return
+    hg root >/dev/null 2>/dev/null && parse_hg_dirty && return
+
+    echo ''
 }
 
 repo_symbol() {
@@ -104,13 +105,13 @@ repo_symbol() {
         echo %{$reset_color%}%{$fg[red]%}git%{$reset_color%}@%{$fg[cyan]%}\[`git rev-parse --abbrev-ref HEAD`:`git rev-parse --short HEAD`\]%{$reset_color%}
     elif [[ -n $(command hg status 2>/dev/null >/dev/null) ]]; then
         echo %{$reset_color%}%{$fg[red]%}hg%{$reset_color%}@%{$fg[cyan]%}\[`hg branch`:`hg identify --num`\]%{$reset_color%}
-	fi
+    fi
 }
 
 gbl_git_prompt_info() {
-  ref=$(command git rev-parse --short HEAD 2> /dev/null) && \
-  ref="$(command git symbolic-ref HEAD 2> /dev/null):$ref" || return
-  echo "$ZSH_THEME_GIT_PROMPT_PREFIX${ref#refs/heads/}$ZSH_THEME_GIT_PROMPT_SUFFIX"
+    ref=$(command git rev-parse --short HEAD 2> /dev/null) && \
+        ref="$(command git symbolic-ref HEAD 2> /dev/null):$ref" || return
+    echo "$ZSH_THEME_GIT_PROMPT_PREFIX${ref#refs/heads/}$ZSH_THEME_GIT_PROMPT_SUFFIX"
 }
 
 # Prefix/suffix
